@@ -1,0 +1,594 @@
+<sdf version='1.7'>
+  <world name='default'>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>65535</collide_bitmask>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='robot'>
+      <joint name='virtual_joint' type='fixed'>
+        <pose relative_to='__model__'>0 0 0 0 -0 0</pose>
+        <parent>world</parent>
+        <child>base_link</child>
+      </joint>
+      <link name='base_link'>
+        <pose relative_to='virtual_joint'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_link_collision'>
+          <pose>-0.5 -0.5 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/basement.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='base_link_visual'>
+          <pose>-0.5 -0.5 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/basement.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_1' type='revolute'>
+        <pose relative_to='base_link'>0 0 0.307 0 -0 0</pose>
+        <parent>base_link</parent>
+        <child>base_plate</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.5708</lower>
+            <upper>1.5708</upper>
+            <effort>30</effort>
+            <velocity>10</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='base_plate'>
+        <pose relative_to='joint_1'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_plate_collision'>
+          <pose>-0.39 -0.39 -0.56 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/base_plate.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='base_plate_visual'>
+          <pose>-0.39 -0.39 -0.56 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/base_plate.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_2' type='revolute'>
+        <pose relative_to='base_plate'>-0.02 0 0.35 0 -0 0</pose>
+        <parent>base_plate</parent>
+        <child>forward_drive_arm</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <limit>
+            <lower>-1.5708</lower>
+            <upper>1.5708</upper>
+            <effort>30</effort>
+            <velocity>10</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='forward_drive_arm'>
+        <pose relative_to='joint_2'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <collision name='forward_drive_arm_collision'>
+          <pose>0.19 0.06 -0.08 -1.57079 -1.57079 3.14159</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/forward_drive_arm.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='forward_drive_arm_visual'>
+          <pose>0.19 0.06 -0.08 -1.57079 -1.57079 3.14159</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/forward_drive_arm.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_3' type='revolute'>
+        <pose relative_to='forward_drive_arm'>0 0 0.8 0 -0 0</pose>
+        <parent>forward_drive_arm</parent>
+        <child>horizontal_arm</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <limit>
+            <lower>-1.5708</lower>
+            <upper>1.5708</upper>
+            <effort>30</effort>
+            <velocity>10</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='horizontal_arm'>
+        <pose relative_to='joint_3'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0.273333 0 0 -0 0</pose>
+          <mass>0.15</mass>
+          <inertia>
+            <ixx>2.02241</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>2</iyy>
+            <iyz>0</iyz>
+            <izz>2.02241</izz>
+          </inertia>
+        </inertial>
+        <collision name='horizontal_arm_collision'>
+          <pose>-0.03 -0.4 -0.06 1.5708 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/horizontal_arm.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <collision name='horizontal_arm_fixed_joint_lump__claw_support_collision_1'>
+          <pose>0 0.77 -0.15 0 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/claw_support.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='horizontal_arm_visual'>
+          <pose>-0.03 -0.4 -0.06 1.5708 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/horizontal_arm.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name='horizontal_arm_fixed_joint_lump__claw_support_visual_1'>
+          <pose>0 0.77 -0.15 0 -0 1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/claw_support.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_4' type='revolute'>
+        <pose relative_to='horizontal_arm'>-0.04 0.95 -0.1 0 -0 0</pose>
+        <parent>horizontal_arm</parent>
+        <child>gripper_right</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.5708</lower>
+            <upper>0</upper>
+            <effort>30</effort>
+            <velocity>10</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='gripper_right'>
+        <pose relative_to='joint_4'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <collision name='gripper_right_collision'>
+          <pose>-0.1 0.5 -0.1 0 0 -1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/right_finger.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='gripper_right_visual'>
+          <pose>-0.1 0.5 -0.1 0 0 -1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/right_finger.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='joint_5' type='revolute'>
+        <pose relative_to='horizontal_arm'>-0.22 0.95 -0.1 0 -0 0</pose>
+        <parent>horizontal_arm</parent>
+        <child>gripper_left</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>1.5708</upper>
+            <effort>30</effort>
+            <velocity>10</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='gripper_left'>
+        <pose relative_to='joint_5'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <collision name='gripper_left_collision'>
+          <pose>-0.04 0.5 -0.1 0 0 -1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/left_finger.STL</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='gripper_left_visual'>
+          <pose>-0.04 0.5 -0.1 0 0 -1.5708</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>/home/mauro/Pick-And-Place/Pick-And-Place/src/robot_description/mesh/left_finger.STL</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <static>0</static>
+      <plugin name='gazebo_ros_control' filename='libgazebo_ros_control.so'>
+        <robotNamespace>/robot</robotNamespace>
+        <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        <legacyModeNS>1</legacyModeNS>
+      </plugin>
+      <plugin name='joint_5_mimic_joint_4' filename='libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so'>
+        <joint>joint_4</joint>
+        <mimicJoint>joint_5</mimicJoint>
+        <multiplier>-1.0</multiplier>
+        <offset>0</offset>
+        <maxEffort>30</maxEffort>
+        <robotNamespace>/robot</robotNamespace>
+      </plugin>
+      <pose>0 0 0 0 -0 0</pose>
+    </model>
+    <state world_name='default'>
+      <sim_time>98 710000000</sim_time>
+      <real_time>195 252118781</real_time>
+      <wall_time>1669972164 697593626</wall_time>
+      <iterations>98710</iterations>
+      <model name='ground_plane'>
+        <pose>0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='robot'>
+        <pose>0 -0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='base_link'>
+          <pose>0 -0 0 0 -0 0</pose>
+          <velocity>0 -0 -0 0 -0 0</velocity>
+          <acceleration>0 -0 -3.3e-05 1.3e-05 -2e-06 -0</acceleration>
+          <wrench>0 -0 -3.3e-05 0 -0 0</wrench>
+        </link>
+        <link name='base_plate'>
+          <pose>0 -0 0.307 0 -0 0</pose>
+          <velocity>-0 -0 -0 0 -0 0</velocity>
+          <acceleration>-0 -3e-06 -3.4e-05 2.2e-05 -3e-06 0</acceleration>
+          <wrench>-0 -0 -3e-06 0 -0 0</wrench>
+        </link>
+        <link name='forward_drive_arm'>
+          <pose>-0.02 0 0.657 0 -0 0</pose>
+          <velocity>-0 -0 -0 0 -0 0</velocity>
+          <acceleration>-2e-06 -1.6e-05 -4.1e-05 3.1e-05 -4e-06 -0</acceleration>
+          <wrench>-0 -2e-06 -4e-06 0 -0 0</wrench>
+        </link>
+        <link name='gripper_left'>
+          <pose>-0.24 0.95 1.357 0 -0 0</pose>
+          <velocity>-0 0 -0 0 -0 0</velocity>
+          <acceleration>-6e-06 -4.6e-05 -1.1e-05 4.2e-05 -6e-06 0</acceleration>
+          <wrench>-0 -0 -0 0 -0 0</wrench>
+        </link>
+        <link name='gripper_right'>
+          <pose>-0.06 0.95 1.357 0 -0 0</pose>
+          <velocity>-0 0 -0 0 -0 0</velocity>
+          <acceleration>-6e-06 -4.6e-05 -9e-06 4.4e-05 -6e-06 0</acceleration>
+          <wrench>-0 -0 -0 0 -0 0</wrench>
+        </link>
+        <link name='horizontal_arm'>
+          <pose>-0.02 0 1.457 0 -0 0</pose>
+          <velocity>-0 0 -0 0 -0 0</velocity>
+          <acceleration>-6e-06 -4.8e-05 -3.5e-05 3.9e-05 -5e-06 0</acceleration>
+          <wrench>-1e-06 -7e-06 -5e-06 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>5.3142 0.499156 3.67058 0 0.511643 3.14019</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>
